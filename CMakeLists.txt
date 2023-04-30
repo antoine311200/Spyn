@@ -11,7 +11,7 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 project (${PROJECT_NAME})
 
 # Add source to this project's executable.
-add_executable (Spyn "Spyn.cpp" "Spyn.h")
+add_executable (Spyn "Spyn.cpp" "Spyn.h" "src/distributions/Normal.h" "src/distributions/Law.h" "src/distributions/Normal.cpp" "src/utils/Constants.h")
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
@@ -31,7 +31,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(simple_test "tests/wrapper_test.cpp")
+add_executable(simple_test "tests/wrapper_test.cpp" "src/distributions/Normal.h" "src/distributions/Law.h" "src/distributions/Normal.cpp" "src/utils/Constants.h")
 
 target_link_libraries(
 	simple_test
