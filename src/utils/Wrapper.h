@@ -9,7 +9,12 @@ public:
 	Wrapper(const T& rhs) { _ptr = rhs.clone(); }
 	Wrapper(const Wrapper<T>& rhs) { if (rhs._ptr != 0) _ptr = rhs._ptr->clone(); else _ptr = 0; }
 
-	~Wrapper() { if (_ptr) delete _ptr; }
+	~Wrapper() {
+		if (_ptr != 0) {
+			_ptr = 0;
+			delete _ptr;
+		}
+	}
 
 	Wrapper& operator=(const Wrapper<T>& rhs)
 	{
