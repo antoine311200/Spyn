@@ -8,28 +8,37 @@ public:
 	~SimpleClass() {}
 	SimpleClass* clone() const { return new SimpleClass(*this); }
 	int get() { return prop; }
+	void set(int newProp) { prop = newProp; }
 
 private:
 	int prop;
 };
 
-// Demonstrate some basic assertions.
+
+// Demonstrate wrapper assertions.
 TEST(WrapperTest, WrapperAssertions) {
 
 	// Create a SimpleClass object
 	SimpleClass simple;
-	SimpleClass* simple_ptr = &simple;
-	
+	const SimpleClass simpleConst;
+
 	// Create a Wrapper object with the SimpleClass as a template
-	Wrapper<SimpleClass> simpleWrapped;
+	Wrapper<SimpleClass> simpleWrapped(&simple);
+	Wrapper<SimpleClass> simpleWrappedClone(simple);
+	Wrapper<SimpleClass> simpleWrappedConst(simpleConst);
+	Wrapper<SimpleClass> simpleWrappedDupplicate;
 
-	// Equalize the SimpleClass with the Wrapper
-	simpleWrapped = simple;
+	simpleWrappedDupplicate = simpleWrapped;
 
-	// Test equalities
-	EXPECT_EQ(simple, simpleWrapped);
-	EXPECT_EQ(&simple, &simpleWrapped);
-	EXPECT_EQ(simple.get(), simpleWrapped->get());
-	EXPECT_EQ(simple_ptr->get(), simpleWrapped->get());
+	simpleWrapped->set(1);
+	simpleWrappedClone->set(2);
+	simpleWrappedDupplicate->set(3);
 
-}
+	EXPECT_EQ(&(*simpleWrapped), &simple);
+	EXPECT_NE(&(*simpleWrappedClone), &simple);
+	EXPECT_NE(&simpleWrappedDupplicate, &simpleWrapped);
+	EXPECT_NE(&(*simpleWrappedConst), &simpleConst);
+
+	EXPECT_EQ(simpleWrapped->get(), simple.get());
+	EXPECT_NE(simpleWrappedDupplicate->get(), simpleWrapped->get()); // 3 != 1
+};
